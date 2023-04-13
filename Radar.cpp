@@ -135,6 +135,30 @@ void *threadClient(void *arg) {
 			aircraft_data[i].y += aircraft_data[i].speedY * elapsed_time;
 			aircraft_data[i].z += aircraft_data[i].speedZ * elapsed_time;
 		}
+
+		// Storing the airspace every 30 seconds
+		const char* logfilename = "log.txt";
+		ofstream logfile(logfilename);
+		string logline;
+
+		if(!logfile.is_open())
+			printf("Error: could not open log file.\n");
+
+		// Read the first line
+		for (int i=0; i<10; i++) {
+			if (int(aircraft_data[i].time) % 30 == 0) {
+				printf("30s Breakpoint\n");
+				logfile << aircraft_data[i].time << "\t"
+						<< aircraft_data[i].id << "\t"
+						<< aircraft_data[i].x << "\t"
+						<< aircraft_data[i].y << "\t"
+						<< aircraft_data[i].z << "\t"
+						<< aircraft_data[i].speedX << "\t"
+						<< aircraft_data[i].speedY << "\t"
+						<< aircraft_data[i].speedZ << "\n";
+			}
+		}
+		logfile.close();
 	}
 	/* Close the connection */
 	name_close(server_coid);
